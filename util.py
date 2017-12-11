@@ -1,5 +1,6 @@
 import os
 
+
 def empty_dir(folder):
     """
     Empty a folder
@@ -21,3 +22,5 @@ def build_empty_dir(folder, root_dir=os.getcwd()):
     """
     os.makedirs(os.path.join(root_dir, folder), exist_ok=True)
     empty_dir(os.path.join(root_dir, folder))
+
+###

@@ -4,6 +4,7 @@ from keras.models import Model
 from keras.layers import Input, Activation, Dense, Flatten
 from keras.layers import Conv2D, MaxPool2D
 from keras import optimizers
+from keras import losses
 import keras
 import util
 import my_callback
@@ -20,7 +21,6 @@ epochs = 50
 
 # x_train=x_train.astype('float32')/255
 # x_test=x_test.astype('float32')/255
-
 
 x_train = x_train.reshape((-1, 28, 28, 1))
 x_test = x_test.reshape((-1, 28, 28, 1))
@@ -63,7 +63,7 @@ model = Model(inputs=inputs, outputs=out)
 
 optim = optimizers.Adam(lr=initial_learning_rate)
 model.compile(optimizer=optim,
-              loss='categorical_crossentropy',
+              loss=losses.categorical_crossentropy,
               metrics=['accuracy'])
 
 util.build_empty_dir('logs')
