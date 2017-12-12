@@ -82,6 +82,7 @@ def visualize_basic(feat, labels, epoch):
     plt.title('epoch = {}'.format(epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
     plt.savefig('./images-basic/epoch-{}-val.png'.format(i2str(epoch)))
+    plt.close()
 
 
 def visualize(feat, labels, epoch, centers):
@@ -95,3 +96,4 @@ def visualize(feat, labels, epoch, centers):
     plt.title('epoch = {}'.format(epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
     plt.savefig('./images/epoch-{}-val.png'.format(i2str(epoch)))
+    plt.close()
