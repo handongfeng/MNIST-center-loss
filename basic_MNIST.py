@@ -50,7 +50,7 @@ def basic_model(x):
     #
     x = Flatten()(x)
     x = Dense(2)(x)
-    x = PReLU()(x)
+    x = PReLU(name='side_out')(x)
     return Dense(10, activation='softmax')(x)
 
 

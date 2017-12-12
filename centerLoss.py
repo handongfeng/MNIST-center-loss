@@ -18,7 +18,7 @@ import numpy as np
 
 initial_learning_rate = 1e-3
 batch_size = 64
-epochs = 100
+epochs = 50
 lambda_centerloss = 0.1
 
 
