@@ -73,26 +73,26 @@ y_test_onehot = to_categorical(y_test, 10)
 
 def my_model(x, labels):
     x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = PReLU(x)
+    x = PReLU()(x)
     x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = PReLU(x)
+    x = PReLU()(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = PReLU(x)
+    x = PReLU()(x)
     x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = PReLU(x)
+    x = PReLU()(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = PReLU(x)
+    x = PReLU()(x)
     x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = PReLU(x)
+    x = PReLU()(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Flatten()(x)
     x = Dense(2)(x)
-    x = PReLU(x, name='side_out')
+    x = PReLU(name='side_out')(x)
     #
     main = Dense(10, activation='softmax', name='main_out')(x)
     side = CenterLossLayer(alpha=0.5, name='centerlosslayer')([x, labels])
