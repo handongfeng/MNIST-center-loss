@@ -70,7 +70,7 @@ def run(lambda_centerloss):
 
 
     def zero_loss(y_true, y_pred):
-        return K.mean(y_pred, axis=0)
+        return 0.5*K.mean(y_pred, axis=0)
 
 
     ### get data
