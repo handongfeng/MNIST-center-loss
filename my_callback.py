@@ -15,6 +15,19 @@ class SideOutput(Callback):
         return
 
 
+
+
+class CenterCall(Callback):
+
+    def on_epoch_end(self, epoch, logs={}):
+        data = self.validation_data
+        labels = np.argmax(data[1], axis=1)
+        model = Model(inputs=self.model.input[0], outputs=self.model.get_layer('side_out').output)
+        output = model.predict(data[0])
+        visualize(output, labels, epoch)
+        return
+
+
 def visualize(feat, labels, epoch):
     c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
          '#ff00ff', '#990000', '#999900', '#009900', '#009999']
