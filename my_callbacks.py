@@ -65,6 +65,14 @@ class Alpha_Print(Callback):
 
 ###
 
+def i2str(i):
+    s = str(i)
+    if len(s) == 1:
+        return '0' + s
+    else:
+        return s
+
+
 def visualize_basic(feat, labels, epoch):
     c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
          '#ff00ff', '#990000', '#999900', '#009900', '#009999']
@@ -74,7 +82,7 @@ def visualize_basic(feat, labels, epoch):
         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
     plt.title('epoch = {}'.format(epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
-    plt.savefig('./images-basic/epoch-{}-val.png'.format(epoch))
+    plt.savefig('./images-basic/epoch-{}-val.png'.format(i2str(epoch)))
 
 
 def visualize(feat, labels, epoch, centers):
@@ -87,4 +95,4 @@ def visualize(feat, labels, epoch, centers):
     plt.plot(centers[:, 0], centers[:, 1], 'kx', mew=2, ms=4)
     plt.title('epoch = {}'.format(epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
-    plt.savefig('./images/epoch-{}-val.png'.format(epoch))
+    plt.savefig('./images/epoch-{}-val.png'.format(i2str(epoch)))

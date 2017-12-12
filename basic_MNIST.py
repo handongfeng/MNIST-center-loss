@@ -1,14 +1,12 @@
 from keras.callbacks import TensorBoard
 from keras.datasets import mnist
 from keras.models import Model
-from keras.layers import Input, Activation, Dense, Flatten, BatchNormalization
+from keras.layers import Input, Dense, Flatten, BatchNormalization
 from keras.layers import Conv2D, MaxPool2D
 from keras import optimizers
 from keras import losses
 from keras.utils import to_categorical
-from keras import initializers
 from keras.layers.advanced_activations import PReLU
-from keras.constraints import max_norm
 import util
 import my_callbacks
 
