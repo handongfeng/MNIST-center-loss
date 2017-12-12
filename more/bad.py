@@ -9,7 +9,7 @@ from keras import losses
 from keras import backend as K
 from keras.engine.topology import Layer
 
-import util
+import utils
 import my_callbacks
 import numpy as np
 
@@ -99,9 +99,9 @@ model.compile(optimizer=optim,
               loss=[losses.categorical_crossentropy, aux_loss],
               loss_weights=[1, centerloss_weight])
 
-util.build_empty_dir('logs')
+utils.build_empty_dir('logs')
 call1 = TensorBoard(log_dir='logs')
-util.build_empty_dir('images')
+utils.build_empty_dir('images')
 call2 = my_callbacks.CenterCall()
 
 model.fit([x_train, y_train_onehot], [y_train_onehot, np.zeros((x_train.shape[0],1))], batch_size=batch_size, epochs=epochs,

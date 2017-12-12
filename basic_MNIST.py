@@ -8,7 +8,7 @@ from keras import losses
 from keras.utils import to_categorical
 from keras.layers.advanced_activations import PReLU
 
-import util
+import utils
 import my_callbacks
 
 ### parameters
@@ -71,8 +71,8 @@ model.compile(optimizer=optim,
 
 ### callbacks
 
-util.build_empty_dir('logs-basic')
-util.build_empty_dir('images-basic')
+utils.build_empty_dir('logs-basic')
+utils.build_empty_dir('images-basic')
 call1 = TensorBoard(log_dir='logs-basic')
 call2 = my_callbacks.BasicCall()
 

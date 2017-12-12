@@ -10,7 +10,7 @@ from keras.engine.topology import Layer
 from keras.utils import to_categorical
 from keras.layers.advanced_activations import PReLU
 
-import util
+import utils
 import my_callbacks
 import numpy as np
 
@@ -123,8 +123,8 @@ model.compile(optimizer=optim,
 
 ### callbacks
 
-util.build_empty_dir('logs')
-util.build_empty_dir('images')
+utils.build_empty_dir('logs')
+utils.build_empty_dir('images')
 call1 = TensorBoard(log_dir='logs')
 call2 = my_callbacks.CenterLossCall()
 
