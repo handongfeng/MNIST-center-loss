@@ -17,13 +17,17 @@ class BasicCall(Callback):
 
 class CenterLossCall(Callback):
 
+    def __init__(self, lambda_centerloss):
+        super().__init__()
+        self.lambda_centerloss = lambda_centerloss
+
     def on_epoch_end(self, epoch, logs={}):
         data = self.validation_data
         labels = np.argmax(data[1], axis=1)
         model = Model(inputs=self.model.input[0], outputs=self.model.get_layer('side_out').output)
         output = model.predict(data[0])
         centers = self.model.get_layer('centerlosslayer').get_weights()[0]
-        visualize(output, labels, epoch, centers)
+        visualize(output, labels, epoch, centers, self.lambda_centerloss)
         return
 
 
@@ -35,6 +39,7 @@ class Centers_Print(Callback):
         print(len(self.model.get_layer('centerlosslayer').get_weights()))
         print(self.model.get_layer('centerlosslayer').get_weights()[0])
         print('---')
+
 
 class Counter_Print(Callback):
 
@@ -86,13 +91,13 @@ def visualize_basic(feat, labels, epoch):
     plt.clf()
     for i in range(10):
         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
-    plt.title('epoch = {}'.format(epoch))
+    plt.title('Epoch = {}'.format(epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
     plt.savefig('./images-basic/epoch-{}-val.png'.format(i2str(epoch)))
     plt.close()
 
 
-def visualize(feat, labels, epoch, centers):
+def visualize(feat, labels, epoch, centers, lambda_cl):
     c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
          '#ff00ff', '#990000', '#999900', '#009900', '#009999']
     plt.figure()
@@ -100,7 +105,7 @@ def visualize(feat, labels, epoch, centers):
     for i in range(10):
         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
     plt.plot(centers[:, 0], centers[:, 1], 'kx', mew=2, ms=4)
-    plt.title('epoch = {}'.format(epoch))
+    plt.title('Lambda_centerloss={}, Epoch = {}'.format(lambda_cl, epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
     plt.savefig('./images/epoch-{}-val.png'.format(i2str(epoch)))
     plt.close()

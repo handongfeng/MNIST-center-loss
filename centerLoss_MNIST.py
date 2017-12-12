@@ -126,7 +126,7 @@ model.compile(optimizer=optim,
 utils.build_empty_dir('logs')
 utils.build_empty_dir('images')
 call1 = TensorBoard(log_dir='logs')
-call2 = my_callbacks.CenterLossCall()
+call2 = my_callbacks.CenterLossCall(lambda_centerloss)
 
 ### fit
 
