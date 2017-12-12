@@ -25,21 +25,9 @@ def visualize(feat, labels, epoch):
     plt.title('epoch = {}'.format(epoch))
     plt.savefig('./images/epoch-{}.png'.format(epoch))
 
-class SideOutputCenter(Callback):
+##
 
-    def on_epoch_end(self, epoch, logs={}):
-        print('\n=========')
-        print(len(
-            self.validation_data))  # be careful of the dimenstion of the self.validation_data, somehow some extra dim will be included
-        print(self.validation_data[0].shape)
-        print(self.validation_data[1].shape)
-        print('=========')
-        data = self.validation_data
-        labels = data[1].flatten()
-        model = Model(inputs=self.model.input[0], outputs=self.model.get_layer('side_out').output)
-        output = model.predict(data[0])
-        visualize(output, labels, epoch)
-        return
+
 
 
 

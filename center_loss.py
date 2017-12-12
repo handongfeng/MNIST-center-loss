@@ -5,6 +5,7 @@ from keras.layers import Input, Activation, Dense, Flatten, Embedding, Lambda
 from keras.layers import Conv2D, MaxPool2D
 from keras import optimizers
 import keras
+from keras import losses
 from keras import backend as K
 import numpy as np
 import util
@@ -57,30 +58,25 @@ def my_model(x):
 ###
 
 inputs = Input((28, 28, 1))
-final_out, side_out = my_model(inputs)
+final_output, side_output = my_model(inputs)
 
-input_target = Input(shape=(1,))  # single value ground truth labels as inputs
-centers = Embedding(10, 2)(input_target)
-l2_loss = Lambda(lambda x: K.sum(K.square(x[0] - x[1][:, 0]), 1, keepdims=True), name='l2_loss')([side_out, centers])
-
-model = Model(inputs=[inputs, input_target], outputs=[final_out, l2_loss])
+model = Model(inputs=inputs, outputs=[final_output,side_output])
 # model.summary()
 
 optim = optimizers.Adam(lr=initial_learning_rate)
 model.compile(optimizer=optim,
-              loss=['categorical_crossentropy', lambda y_true, y_pred: y_pred],
-              loss_weights=[1, lambda_centerloss], metrics=['accuracy'])
+              loss=[losses.categorical_crossentropy, util.centerloss],
+              loss_weights=[1, lambda_centerloss])
 
 util.build_empty_dir('logs')
 call1 = TensorBoard(log_dir='logs')
 util.build_empty_dir('images')
-call2 = my_callback.SideOutputCenter()
+call2 = my_callback.SideOutput()
 
-random_y_train = np.random.rand(x_train.shape[0], 1)
-random_y_test = np.random.rand(x_test.shape[0], 1)
 
-model.fit([x_train, y_train], [y_train_onehot, random_y_train], batch_size=batch_size, epochs=epochs,
-          verbose=1, validation_data=([x_test, y_test], [y_test_onehot, random_y_test]),
+model.fit(x_train, [y_train_onehot, y_train], batch_size=batch_size, epochs=epochs,
+          verbose=1, validation_data=(x_test, [y_test_onehot, y_test]),
           callbacks=[call1, call2])
 
 ###
+

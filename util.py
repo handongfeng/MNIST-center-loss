@@ -24,3 +24,5 @@ def build_empty_dir(folder, root_dir=os.getcwd()):
     empty_dir(os.path.join(root_dir, folder))
 
 ###
+
+def centerloss(y_true,y_pred):
