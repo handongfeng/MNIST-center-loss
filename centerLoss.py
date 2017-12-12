@@ -113,14 +113,21 @@ model.compile(optimizer=optim,
               loss=[losses.categorical_crossentropy, zero_loss],
               loss_weights=[1, centerloss_variable])
 
+### callbacks
+
 util.build_empty_dir('logs')
 util.build_empty_dir('images')
 call1 = TensorBoard(log_dir='logs')
 call2 = my_callbacks.CenterLossCall()
-call3 = my_callbacks.ActivateCenterLoss(centerloss_variable, lambda_centerloss, 2)
-call4 = my_callbacks.Centers_Print()
+call3 = my_callbacks.Centers_Print()
+call4 = my_callbacks.ActivateCenterLoss(variable=centerloss_variable, value=lambda_centerloss)
 
-model.fit([x_train, y_train_onehot], [y_train_onehot, np.zeros((x_train.shape[0], 1))], batch_size=batch_size,
+### fit
+
+dummy1 = np.zeros((x_train.shape[0], 1))
+dummy2 = np.zeros((x_test.shape[0], 1))
+
+model.fit([x_train, y_train_onehot], [y_train_onehot, dummy1], batch_size=batch_size,
           epochs=epochs,
-          verbose=1, validation_data=([x_test, y_test_onehot], [y_test_onehot, np.zeros((x_test.shape[0], 1))]),
+          verbose=2, validation_data=([x_test, y_test_onehot], [y_test_onehot, dummy2]),
           callbacks=[call1, call2, call3, call4])
