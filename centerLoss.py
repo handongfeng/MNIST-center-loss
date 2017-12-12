@@ -8,6 +8,7 @@ from keras import losses
 from keras import backend as K
 from keras.engine.topology import Layer
 from keras.utils import to_categorical
+from keras.layers.advanced_activations import PReLU
 
 import util
 import my_callbacks
@@ -72,25 +73,26 @@ y_test_onehot = to_categorical(y_test, 10)
 
 def my_model(x, labels):
     x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = Activation('relu')(x)
+    x = PReLU(x)
     x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = Activation('relu')(x)
+    x = PReLU(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = Activation('relu')(x)
+    x = PReLU(x)
     x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = Activation('relu')(x)
+    x = PReLU(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = Activation('relu')(x)
+    x = PReLU(x)
     x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    x = Activation('relu')(x)
+    x = PReLU(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Flatten()(x)
-    x = Dense(2, name='side_out')(x)
+    x = Dense(2)(x)
+    x = PReLU(x, name='side_out')
     #
     main = Dense(10, activation='softmax', name='main_out')(x)
     side = CenterLossLayer(alpha=0.5, name='centerlosslayer')([x, labels])
