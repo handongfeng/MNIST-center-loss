@@ -52,7 +52,7 @@ def run(lambda_centerloss):
         def call(self, x, mask=None):
             # x[0] is Nx2, x[1] is Nx10, self.centers is 10x2
             delta_centers = K.dot(K.transpose(x[1]), (K.dot(x[1], self.centers) - x[0]))  # 10x2
-            delta_centers /= K.sum(K.transpose(x[1]), axis=1, keepdims=True) + 1
+            delta_centers /= K.sum(K.transpose(x[1]), axis=1, keepdims=True) + 1e-3
             new_centers = self.centers - self.alpha * delta_centers
             self.add_update((self.centers, new_centers), x)
 
@@ -145,3 +145,8 @@ def run(lambda_centerloss):
               epochs=epochs,
               verbose=2, validation_data=([x_test, y_test_onehot], [y_test_onehot, dummy2]),
               callbacks=[call1, call2])
+
+###
+
+if __name__=='__main__':
+    run(0.1)
