@@ -105,7 +105,7 @@ def visualize(feat, labels, epoch, centers, lambda_cl):
     for i in range(10):
         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
     plt.plot(centers[:, 0], centers[:, 1], 'kx', mew=2, ms=4)
-    plt.title('Lambda_centerloss={}, Epoch = {}'.format(lambda_cl, epoch))
+    plt.title('Lambda_centerloss = {}, Epoch = {}'.format(lambda_cl, epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
     plt.savefig('./images/epoch-{}-val.png'.format(i2str(epoch)))
     plt.close()
