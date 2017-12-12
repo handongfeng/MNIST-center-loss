@@ -1,7 +1,7 @@
 from keras.callbacks import TensorBoard
 from keras.datasets import mnist
 from keras.models import Model
-from keras.layers import Input, Activation, Dense, Flatten
+from keras.layers import Input, Dense, Flatten, BatchNormalization
 from keras.layers import Conv2D, MaxPool2D
 from keras import optimizers
 from keras import losses
@@ -72,6 +72,8 @@ y_test_onehot = to_categorical(y_test, 10)
 ### model
 
 def my_model(x, labels):
+    x = BatchNormalization()(x)
+    #
     x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
     x = PReLU()(x)
     x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
@@ -91,8 +93,7 @@ def my_model(x, labels):
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Flatten()(x)
-    x = Dense(2)(x)
-    x = PReLU(name='side_out')(x)
+    x = Dense(2, name='side_out')(x)
     #
     main = Dense(10, activation='softmax', name='main_out')(x)
     side = CenterLossLayer(alpha=0.5, name='centerlosslayer')([x, labels])
@@ -110,7 +111,6 @@ model = Model(inputs=[main_input, aux_input], outputs=[final_output, side_output
 model.summary()
 
 optim = optimizers.Adam(lr=initial_learning_rate)
-# centerloss_variable = K.variable(value=0.0, name='lambda_cl_variable')
 model.compile(optimizer=optim,
               loss=[losses.categorical_crossentropy, zero_loss],
               loss_weights=[1, lambda_centerloss])
@@ -121,8 +121,6 @@ util.build_empty_dir('logs')
 util.build_empty_dir('images')
 call1 = TensorBoard(log_dir='logs')
 call2 = my_callbacks.CenterLossCall()
-call3 = my_callbacks.Centers_Print()
-# call4 = my_callbacks.ActivateCenterLoss(variable=centerloss_variable, value=lambda_centerloss)
 
 ### fit
 
@@ -132,4 +130,4 @@ dummy2 = np.zeros((x_test.shape[0], 1))
 model.fit([x_train, y_train_onehot], [y_train_onehot, dummy1], batch_size=batch_size,
           epochs=epochs,
           verbose=2, validation_data=([x_test, y_test_onehot], [y_test_onehot, dummy2]),
-          callbacks=[call1, call2, call3]) #, call4])
+          callbacks=[call1, call2])
