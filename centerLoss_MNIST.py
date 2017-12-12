@@ -19,7 +19,7 @@ import numpy as np
 initial_learning_rate = 1e-3
 batch_size = 64
 epochs = 50
-lambda_centerloss = 0.1
+lambda_centerloss = 1.0
 
 
 ### special layer
@@ -124,7 +124,7 @@ model.compile(optimizer=optim,
 ### callbacks
 
 utils.build_empty_dir('logs')
-utils.build_empty_dir('images')
+utils.build_empty_dir('images-lambda-{}'.format(lambda_centerloss))
 call1 = TensorBoard(log_dir='logs')
 call2 = my_callbacks.CenterLossCall(lambda_centerloss)
 
