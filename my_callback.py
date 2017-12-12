@@ -28,11 +28,13 @@ class CenterLossCall(Callback):
 
 
 class Centers_print(Callback):
+
     def on_epoch_end(self, epoch, logs=None):
-        print(self.model.get_layer('center_loss_out').get_weights())
+        print(self.model.get_layer('centerlosslayer').get_weights())
 
 
 class ChangeLossWeights(Callback):
+
     def __init__(self, variable, value, threshold):
         self.variable = variable
         self.value = value
