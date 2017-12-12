@@ -19,7 +19,7 @@ import numpy as np
 initial_learning_rate = 1e-3
 batch_size = 64
 epochs = 100
-lambda_centerloss = 1
+lambda_centerloss = 0.1
 
 
 ###
@@ -110,10 +110,10 @@ model = Model(inputs=[main_input, aux_input], outputs=[final_output, side_output
 model.summary()
 
 optim = optimizers.Adam(lr=initial_learning_rate)
-centerloss_variable = K.variable(value=0.0, name='lambda_cl_variable')
+# centerloss_variable = K.variable(value=0.0, name='lambda_cl_variable')
 model.compile(optimizer=optim,
               loss=[losses.categorical_crossentropy, zero_loss],
-              loss_weights=[1, centerloss_variable])
+              loss_weights=[1, lambda_centerloss])
 
 ### callbacks
 
@@ -122,7 +122,7 @@ util.build_empty_dir('images')
 call1 = TensorBoard(log_dir='logs')
 call2 = my_callbacks.CenterLossCall()
 call3 = my_callbacks.Centers_Print()
-call4 = my_callbacks.ActivateCenterLoss(variable=centerloss_variable, value=lambda_centerloss)
+# call4 = my_callbacks.ActivateCenterLoss(variable=centerloss_variable, value=lambda_centerloss)
 
 ### fit
 
@@ -132,4 +132,4 @@ dummy2 = np.zeros((x_test.shape[0], 1))
 model.fit([x_train, y_train_onehot], [y_train_onehot, dummy1], batch_size=batch_size,
           epochs=epochs,
           verbose=2, validation_data=([x_test, y_test_onehot], [y_test_onehot, dummy2]),
-          callbacks=[call1, call2, call3, call4])
+          callbacks=[call1, call2, call3]) #, call4])
