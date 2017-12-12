@@ -1,13 +1,13 @@
 from keras.callbacks import TensorBoard
 from keras.datasets import mnist
 from keras.models import Model
-from keras.layers import Input, Activation, Dense, Flatten, Embedding, Lambda
+from keras.layers import Input, Activation, Dense, Flatten
 from keras.layers import Conv2D, MaxPool2D
 from keras import optimizers
-import keras
 from keras import losses
 from keras import backend as K
 from keras.engine.topology import Layer
+from keras.utils import to_categorical
 
 import util
 import my_callback
@@ -65,8 +65,8 @@ def zero_loss(y_true, y_pred):
 
 x_train = x_train.reshape((-1, 28, 28, 1))
 x_test = x_test.reshape((-1, 28, 28, 1))
-y_train_onehot = keras.utils.to_categorical(y_train, 10)
-y_test_onehot = keras.utils.to_categorical(y_test, 10)
+y_train_onehot = to_categorical(y_train, 10)
+y_test_onehot = to_categorical(y_test, 10)
 
 
 ###

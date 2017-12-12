@@ -26,6 +26,8 @@ class CenterLossCall(Callback):
         visualize_val(output, labels, epoch)
         return
 
+###
+
 
 class Centers_print(Callback):
 
