@@ -36,6 +36,13 @@ class Centers_Print(Callback):
         print(self.model.get_layer('centerlosslayer').get_weights()[0])
         print('---')
 
+class Counter_Print(Callback):
+
+    def on_batch_end(self, epoch, logs={}):
+        print(type(self.model.get_layer('centerlosslayer').get_weights()))
+        print(len(self.model.get_layer('centerlosslayer').get_weights()))
+        print(self.model.get_layer('centerlosslayer').get_weights()[1])
+
 
 # class ActivateCenterLoss(Callback):
 #

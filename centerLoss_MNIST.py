@@ -35,6 +35,10 @@ class CenterLossLayer(Layer):
                                        shape=(10, 2),
                                        initializer='uniform',
                                        trainable=False)
+        self.counter = self.add_weight(name='counter',
+                                       shape=(1,),
+                                       initializer='zeros',
+                                       trainable=False) # just for debugging
         super().build(input_shape)
 
     def call(self, x, mask=None):
@@ -43,6 +47,8 @@ class CenterLossLayer(Layer):
         delta_centers /= K.sum(K.transpose(x[1]), axis=1, keepdims=True) + 1
         new_centers = self.centers - self.alpha * delta_centers
         self.add_update((self.centers, new_centers), x)
+
+        self.add_update((self.counter, self.counter + 1), x)
 
         self.result = x[0] - K.dot(x[1], self.centers)
         self.result = K.sum(self.result ** 2, axis=1, keepdims=True)
