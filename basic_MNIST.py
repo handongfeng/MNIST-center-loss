@@ -8,7 +8,7 @@ from keras import losses
 from keras.utils import to_categorical
 from keras import regularizers
 import util
-import my_callback
+import my_callbacks
 
 ###
 
@@ -68,7 +68,7 @@ model.compile(optimizer=optim,
 util.build_empty_dir('logs')
 call1 = TensorBoard(log_dir='logs')
 util.build_empty_dir('images-basic')
-call2 = my_callback.BasicCall()
+call2 = my_callbacks.BasicCall()
 
 model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=1, validation_data=(x_test, y_test),
           callbacks=[call1, call2])

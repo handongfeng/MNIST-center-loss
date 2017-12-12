@@ -10,7 +10,7 @@ from keras.engine.topology import Layer
 from keras.utils import to_categorical
 
 import util
-import my_callback
+import my_callbacks
 import numpy as np
 
 ###
@@ -28,8 +28,8 @@ centerloss_variable = K.variable(value=0.0, name='lambda_cl_variable')
 class CenterLossLayer(Layer):
 
     def __init__(self, alpha=0.5, **kwargs):
+        super().__init__(**kwargs)
         self.alpha = alpha
-        super(CenterLossLayer, self).__init__(**kwargs)
 
     def build(self, input_shape):
         self.centers = self.add_weight(name='centers',
@@ -114,11 +114,11 @@ model.compile(optimizer=optim,
               loss_weights=[1, centerloss_variable])
 
 util.build_empty_dir('logs')
-call1 = TensorBoard(log_dir='logs')
 util.build_empty_dir('images')
-call2 = my_callback.CenterLossCall()
-call3 = my_callback.ChangeLossWeights(centerloss_variable, lambda_centerloss, 2)
-call4 = my_callback.Centers_print()
+call1 = TensorBoard(log_dir='logs')
+call2 = my_callbacks.CenterLossCall()
+call3 = my_callbacks.ActivateCenterLoss(centerloss_variable, lambda_centerloss, 2)
+call4 = my_callbacks.Centers_Print()
 
 model.fit([x_train, y_train_onehot], [y_train_onehot, np.zeros((x_train.shape[0], 1))], batch_size=batch_size,
           epochs=epochs,
