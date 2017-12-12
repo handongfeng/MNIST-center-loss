@@ -91,7 +91,7 @@ def visualize_basic(feat, labels, epoch):
     plt.clf()
     for i in range(10):
         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
-    plt.title('Epoch = {}'.format(epoch))
+    plt.title('Just cross-entropy. Epoch = {}'.format(epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
     plt.savefig('./images-basic/epoch-{}-val.png'.format(i2str(epoch)))
     plt.close()
