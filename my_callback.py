@@ -1,5 +1,6 @@
 from keras.callbacks import Callback
 from keras.models import Model
+from keras import backend  as K
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -14,6 +15,7 @@ class BasicCall(Callback):
         visualize_val(output, labels, epoch)
         return
 
+
 class CenterLossCall(Callback):
 
     def on_epoch_end(self, epoch, logs={}):
@@ -24,9 +26,23 @@ class CenterLossCall(Callback):
         visualize_val(output, labels, epoch)
         return
 
+
 class Centers_print(Callback):
     def on_epoch_end(self, epoch, logs=None):
         print(self.model.get_layer('center_loss_out').get_weights())
+
+
+class ChangeLossWeights(Callback):
+    def __init__(self, variable, value, threshold):
+        self.variable = variable
+        self.value = value
+        self.threshold = threshold
+
+    def on_epoch_end(self, epoch, logs={}):
+        if epoch < self.threshold:
+            pass
+        else:
+            K.set_value(self.variable, self.value)
 
 
 ###
@@ -41,10 +57,3 @@ def visualize_val(feat, labels, epoch):
     plt.title('epoch = {}'.format(epoch))
     # plt.axis('off')
     plt.savefig('./images/epoch-{}-val.png'.format(epoch))
-
-
-
-
-
-
-

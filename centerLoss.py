@@ -18,16 +18,16 @@ import numpy as np
 initial_learning_rate = 1e-3
 batch_size = 64
 epochs = 50
-centerloss_weight = 0.0001
+lambda_centerloss = 0.1
 
 ###
 
+centerloss_variable = K.variable(value=0.0,name='lambda_cl_variable')
 
 class CenterLossLayer(Layer):
 
-    def __init__(self, alpha=0.5, verbose=True, **kwargs):
+    def __init__(self, alpha=0.5, **kwargs):
         self.alpha = alpha
-        self.verbose = verbose
         super(CenterLossLayer, self).__init__(**kwargs)
 
     def build(self, input_shape):
@@ -38,11 +38,11 @@ class CenterLossLayer(Layer):
         super(CenterLossLayer, self).build(input_shape)
 
     def call(self, x, mask=None):
-        new_centers = self.centers - self.alpha * (
-            K.dot(K.transpose(x[1]), (K.dot(x[1], self.centers) - x[0]))) / K.transpose(
+        new_centers = self.centers - self.alpha * K.dot(K.transpose(x[1]),
+                                                        (K.dot(x[1], self.centers) - x[0])) / K.transpose(
             1 + K.sum(x[1], axis=0, keepdims=True))
         self.add_update((self.centers, new_centers), x)
-        self.result = K.sum((x[0] - K.dot(x[1], self.centers)) ** 2, axis=1, keepdims=True)
+        self.result = x[0] - K.dot(x[1], self.centers)
         return self.result
 
     def compute_output_shape(self, input_shape):
@@ -50,7 +50,7 @@ class CenterLossLayer(Layer):
 
 
 def l2_zero_loss(y_true, y_pred):
-    return 0.5 * K.sum(y_pred, axis=0)
+    return 0.5 * K.sum(K.sum(y_pred ** 2, axis=1, keepdims=True), axis=0)
 
 
 ###
@@ -88,7 +88,7 @@ def my_model(x, labels):
     x = Dense(2, name='side_out')(x)
     #
     main = Dense(10, activation='softmax', name='main_out')(x)
-    side = CenterLossLayer(alpha=0.5, verbose=True, name='center_loss_out')([x, labels])
+    side = CenterLossLayer(alpha=0.5, name='center_loss_out')([x, labels])
     return main, side
 
 
@@ -101,25 +101,18 @@ final_output, side_output = my_model(main_input, aux_input)
 
 model = Model(inputs=[main_input, aux_input], outputs=[final_output, side_output])
 
-# model.summary()
-# print(model.get_layer('center_loss_out').get_weights())
-# for layer in model.layers:
-#     print(layer.name)
-
 optim = optimizers.Adam(lr=initial_learning_rate)
 model.compile(optimizer=optim,
-              loss=[losses.categorical_crossentropy, losses.mean_squared_error],
-              loss_weights=[1, centerloss_weight])
+              loss=[losses.categorical_crossentropy, l2_zero_loss],
+              loss_weights=[1, centerloss_variable])
 
 util.build_empty_dir('logs')
 call1 = TensorBoard(log_dir='logs')
 util.build_empty_dir('images')
 call2 = my_callback.CenterLossCall()
-call3 = my_callback.Centers_print()
+call3 = my_callback.ChangeLossWeights(centerloss_variable,lambda_centerloss,2)
 
-model.fit([x_train, y_train_onehot], [y_train_onehot, np.zeros((x_train.shape[0], 1))], batch_size=batch_size,
+model.fit([x_train, y_train_onehot], [y_train_onehot, np.zeros((x_train.shape[0], 2))], batch_size=batch_size,
           epochs=epochs,
-          verbose=1, validation_data=([x_test, y_test_onehot], [y_test_onehot, np.zeros((x_test.shape[0], 1))]),
+          verbose=1, validation_data=([x_test, y_test_onehot], [y_test_onehot, np.zeros((x_test.shape[0], 2))]),
           callbacks=[call1, call2, call3])
-
-###
