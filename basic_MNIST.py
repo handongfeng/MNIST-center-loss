@@ -5,8 +5,8 @@ from keras.layers import Input, Activation, Dense, Flatten
 from keras.layers import Conv2D, MaxPool2D
 from keras import optimizers
 from keras import losses
-import keras
-
+from keras.utils import to_categorical
+from keras import regularizers
 import util
 import my_callback
 
@@ -22,8 +22,8 @@ epochs = 50
 
 x_train = x_train.reshape((-1, 28, 28, 1))
 x_test = x_test.reshape((-1, 28, 28, 1))
-y_train = keras.utils.to_categorical(y_train, 10)
-y_test = keras.utils.to_categorical(y_test, 10)
+y_train = to_categorical(y_train, 10)
+y_test = to_categorical(y_test, 10)
 
 
 ###
@@ -31,24 +31,24 @@ y_test = keras.utils.to_categorical(y_test, 10)
 def basic_model(x):
     x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
     x = Activation('relu')(x)
-    # x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    # x = Activation('relu')(x)
+    x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
+    x = Activation('relu')(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
     x = Activation('relu')(x)
-    # x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    # x = Activation('relu')(x)
+    x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
+    x = Activation('relu')(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
-    # x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    # x = Activation('relu')(x)
-    # x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-    # x = Activation('relu')(x)
-    # x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
+    x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
+    x = Activation('relu')(x)
+    x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
+    x = Activation('relu')(x)
+    x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Flatten()(x)
-    x = Dense(2,name='side_out')(x)
+    x = Dense(2, name='side_out')(x)
     return Dense(10, activation='softmax')(x)
 
 
