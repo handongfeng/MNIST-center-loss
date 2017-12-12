@@ -9,14 +9,6 @@ We then add the 'center loss term' (centerloss_MNIST.py):
 
 <img src='./readme_figs/centerloss-1.0.png' width='500px'/>
 
-gifs:
-
-<img src='./readme_figs/basic.gif' width='500px'/>
-
-<img src='./readme_figs/centerloss-0.1.gif' width='500px'/>
-
-<img src='./readme_figs/centerloss-1.0.gif' width='500px'/>
-
 
 ---
 
@@ -31,5 +23,13 @@ https://github.com/jxgu1016/MNIST_center_loss_pytorch (PyTorch)
 https://github.com/shamangary/Keras-MNIST-center-loss-with-visualization
 
 https://github.com/EncodeTS/TensorFlow_Center_Loss (TensorFlow)
+
+gifs:
+
+<img src='./readme_figs/basic.gif' style='float: left; width: 30%; margin-right: 1%; margin-bottom: 0.5em;'/>
+
+<img src='./readme_figs/centerloss-0.1.gif' style='float: left; width: 30%; margin-right: 1%; margin-bottom: 0.5em;'/>
+
+<img src='./readme_figs/centerloss-1.0.gif' style='float: left; width: 30%; margin-right: 1%; margin-bottom: 0.5em;'/>
 
 
