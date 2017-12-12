@@ -1,1 +1,1 @@
-![]('./readme_figs/basic.gif')
+<img src='./readme_figs/basic.gif' />
