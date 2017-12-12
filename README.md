@@ -1,1 +1,1 @@
-<img src='./readme_figs/basic.gif' />
+<img src='./readme_figs/basic.gif' width='500px'/>
