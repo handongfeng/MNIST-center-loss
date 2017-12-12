@@ -20,10 +20,8 @@ batch_size = 64
 epochs = 100
 lambda_centerloss = 1
 
+
 ###
-
-centerloss_variable = K.variable(value=0.0, name='lambda_cl_variable')
-
 
 class CenterLossLayer(Layer):
 
@@ -36,30 +34,31 @@ class CenterLossLayer(Layer):
                                        shape=(10, 2),
                                        initializer='uniform',
                                        trainable=False)
-        super(CenterLossLayer, self).build(input_shape)
+        super().build(input_shape)
 
     def call(self, x, mask=None):
-        new_centers = self.centers - self.alpha * K.dot(K.transpose(x[1]),
-                                                        (K.dot(x[1], self.centers) - x[0])) / K.transpose(
-            1e-3 + K.sum(x[1], axis=0, keepdims=True))
+        # x[0] is Nx2, x[1] is Nx10, self.centers is 10x2
+        delta_centers = K.dot(K.transpose(x[1]), (K.dot(x[1], self.centers) - x[0]))  # 10x2
+        delta_centers /= K.sum(K.transpose(x[1]), axis=1, keepdims=True) + 1
+        new_centers = self.centers - self.alpha * delta_centers
         self.add_update((self.centers, new_centers), x)
 
-        t1 = x[0] - K.dot(x[1], self.centers)
-        t1 = K.sum(t1 ** 2, axis=1, keepdims=True)
-        t2 = K.dot(x[1], self.centers)
-        t2 = K.sum(t2 ** 2, axis=1, keepdims=True)
-        self.result = t1 / t2
+        self.result = x[0] - K.dot(x[1], self.centers)
+        self.result = K.sum(self.result ** 2, axis=1, keepdims=True)
         return self.result
 
     def compute_output_shape(self, input_shape):
         return K.int_shape(self.result)
 
 
+### custom loss
+
+
 def zero_loss(y_true, y_pred):
     return K.mean(y_pred, axis=0)
 
 
-###
+### get data
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
@@ -69,7 +68,7 @@ y_train_onehot = to_categorical(y_train, 10)
 y_test_onehot = to_categorical(y_test, 10)
 
 
-###
+### model
 
 def my_model(x, labels):
     x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
@@ -98,7 +97,7 @@ def my_model(x, labels):
     return main, side
 
 
-###
+### compile
 
 main_input = Input((28, 28, 1))
 aux_input = Input((10,))
@@ -109,6 +108,7 @@ model = Model(inputs=[main_input, aux_input], outputs=[final_output, side_output
 model.summary()
 
 optim = optimizers.Adam(lr=initial_learning_rate)
+centerloss_variable = K.variable(value=0.0, name='lambda_cl_variable')
 model.compile(optimizer=optim,
               loss=[losses.categorical_crossentropy, zero_loss],
               loss_weights=[1, centerloss_variable])
