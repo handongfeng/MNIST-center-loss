@@ -53,6 +53,16 @@ class ActivateCenterLoss(Callback):
             K.set_value(self.variable, self.value)
 
 
+class Alpha_Print(Callback):
+
+    def on_epoch_end(self, epoch, logs={}):
+        print('---')
+        print(type(self.model.get_layer('side_out').get_weights()))
+        print(len(self.model.get_layer('side_out').get_weights()))
+        print(self.model.get_layer('side_out').get_weights()[0])
+        print('---')
+
+
 ###
 
 def visualize_basic(feat, labels, epoch):
