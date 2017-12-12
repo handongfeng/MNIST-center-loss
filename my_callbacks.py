@@ -1,6 +1,5 @@
 from keras.callbacks import Callback
 from keras.models import Model
-from keras import backend  as K
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -38,29 +37,29 @@ class Centers_Print(Callback):
         print('---')
 
 
-class ActivateCenterLoss(Callback):
+# class ActivateCenterLoss(Callback):
+#
+#     def __init__(self, variable, value, threshold=1):
+#         super().__init__()
+#         self.variable = variable
+#         self.value = value
+#         self.threshold = threshold
+#
+#     def on_epoch_end(self, epoch, logs={}):
+#         if epoch + 1 < self.threshold:
+#             pass
+#         else:
+#             K.set_value(self.variable, self.value)
 
-    def __init__(self, variable, value, threshold=1):
-        super().__init__()
-        self.variable = variable
-        self.value = value
-        self.threshold = threshold
 
-    def on_epoch_end(self, epoch, logs={}):
-        if epoch + 1 < self.threshold:
-            pass
-        else:
-            K.set_value(self.variable, self.value)
-
-
-class Alpha_Print(Callback):
-
-    def on_epoch_end(self, epoch, logs={}):
-        print('---')
-        print(type(self.model.get_layer('side_out').get_weights()))
-        print(len(self.model.get_layer('side_out').get_weights()))
-        print(self.model.get_layer('side_out').get_weights()[0])
-        print('---')
+# class Alpha_Print(Callback):
+#
+#     def on_epoch_end(self, epoch, logs={}):
+#         print('---')
+#         print(type(self.model.get_layer('side_out').get_weights()))
+#         print(len(self.model.get_layer('side_out').get_weights()))
+#         print(self.model.get_layer('side_out').get_weights()[0])
+#         print('---')
 
 
 ###
