@@ -14,7 +14,7 @@ import util
 import my_callbacks
 import numpy as np
 
-###
+### parameters
 
 initial_learning_rate = 1e-3
 batch_size = 64
@@ -22,7 +22,7 @@ epochs = 50
 lambda_centerloss = 0.1
 
 
-###
+### special layer
 
 class CenterLossLayer(Layer):
 

@@ -7,16 +7,17 @@ from keras import optimizers
 from keras import losses
 from keras.utils import to_categorical
 from keras.layers.advanced_activations import PReLU
+
 import util
 import my_callbacks
 
-###
+### parameters
 
 initial_learning_rate = 1e-3
 batch_size = 64
 epochs = 50
 
-###
+### get data
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
@@ -26,7 +27,7 @@ y_train = to_categorical(y_train, 10)
 y_test = to_categorical(y_test, 10)
 
 
-###
+### model
 
 
 def basic_model(x):
@@ -55,7 +56,7 @@ def basic_model(x):
     return Dense(10, activation='softmax')(x)
 
 
-###
+### compile
 
 inputs = Input((28, 28, 1))
 out = basic_model(inputs)
@@ -68,10 +69,14 @@ model.compile(optimizer=optim,
               loss=losses.categorical_crossentropy,
               metrics=['accuracy'])
 
+### callbacks
+
 util.build_empty_dir('logs-basic')
 util.build_empty_dir('images-basic')
 call1 = TensorBoard(log_dir='logs-basic')
 call2 = my_callbacks.BasicCall()
+
+### fit
 
 model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=2, validation_data=(x_test, y_test),
           callbacks=[call1, call2])
