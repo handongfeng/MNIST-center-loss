@@ -9,7 +9,7 @@ First we train a classifier using cross-entropy loss alone (basic_MNIST.py):
 
 We then add the 'center loss term' (centerloss_MNIST.py): 
 
-<img src='./readme_figs/centerloss.gif' width='500px'/>
+<img src='./readme_figs/centerloss-0-point-1.gif' width='500px'/>
 
 ---
 
