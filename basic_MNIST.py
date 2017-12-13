@@ -96,14 +96,14 @@ def run():
     utils.build_empty_dir('logs-basic')
     # utils.build_empty_dir('images-basic')
     call1 = TensorBoard(log_dir='logs-basic')
-    call2 = my_callbacks.BasicCall()
+    # call2 = my_callbacks.BasicCall()
     call3 = my_callbacks.Alpha_Print()
 
     ### fit
 
     model.fit(x_train, y_train_onehot, batch_size=batch_size, epochs=epochs, verbose=2,
               validation_data=(x_test, y_test_onehot),
-              callbacks=[call1, call2, call3])
+              callbacks=[call1, call3])
 
     ### run training set
 
