@@ -5,12 +5,12 @@ from keras.layers import Input, Dense, Flatten, BatchNormalization
 from keras.layers import Conv2D, MaxPool2D
 from keras import optimizers
 from keras import losses
-from keras import backend as K
 from keras.engine.topology import Layer
 from keras.utils import to_categorical
 from keras.regularizers import l2
 from keras.layers.advanced_activations import PReLU
 from keras import initializers
+from keras import backend as K
 
 import utils
 import my_callbacks
@@ -137,7 +137,7 @@ def run(lambda_centerloss):
     model = Model(inputs=[main_input, aux_input], outputs=[final_output, side_output])
     model.summary()
 
-    optim = optimizers.SGD(lr=initial_learning_rate, momentum=0.9)
+    optim = optimizers.Adam(lr=initial_learning_rate)
     model.compile(optimizer=optim,
                   loss=[losses.categorical_crossentropy, zero_loss],
                   loss_weights=[1, lambda_centerloss])
@@ -167,6 +167,9 @@ def run(lambda_centerloss):
     my_callbacks.visualize_train(feats, y_train, epoch=epochs - 1,
                                  centers=model.get_layer('centerlosslayer').get_weights()[0],
                                  lambda_cl=lambda_centerloss)
+
+    K.clear_session()
+    return
 
 
 ###

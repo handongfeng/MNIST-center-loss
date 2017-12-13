@@ -9,6 +9,7 @@ from keras.utils import to_categorical
 from keras.regularizers import l2
 from keras.layers.advanced_activations import PReLU
 from keras import initializers
+from keras import backend as K
 
 import utils
 import my_callbacks
@@ -85,7 +86,7 @@ def run():
     model = Model(inputs=inputs, outputs=out)
     model.summary()
 
-    optim = optimizers.SGD(lr=initial_learning_rate, momentum=0.9)
+    optim = optimizers.Adam(lr=initial_learning_rate)
     model.compile(optimizer=optim,
                   loss=losses.categorical_crossentropy,
                   metrics=['accuracy'])
@@ -109,6 +110,9 @@ def run():
     reduced_model = Model(inputs=model.input, outputs=model.get_layer('side_out').output)
     feats = reduced_model.predict(x_train)
     my_callbacks.visualize_basic_train(feats, y_train, epoch=epochs - 1)
+
+    K.clear_session()
+    return
 
 
 ###
