@@ -89,19 +89,24 @@ def run(lambda_centerloss):
         x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(
             x)
         x = Activation('relu')(x)
-        x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+        x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(
+            x)
         x = Activation('relu')(x)
         x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
         #
-        x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+        x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(
+            x)
         x = Activation('relu')(x)
-        x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+        x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(
+            x)
         x = Activation('relu')(x)
         x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
         #
-        x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+        x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same',
+                   kernel_regularizer=l2(weight_decay))(x)
         x = Activation('relu')(x)
-        x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+        x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same',
+                   kernel_regularizer=l2(weight_decay))(x)
         x = Activation('relu')(x)
         x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
         #
@@ -143,6 +148,16 @@ def run(lambda_centerloss):
               epochs=epochs,
               verbose=2, validation_data=([x_test, y_test_onehot], [y_test_onehot, dummy2]),
               callbacks=[call1, call2])
+
+    ###
+
+    model2 = Model(inputs=model.input[0], outputs=model.get_layer('side_out').output)
+
+    feats = model2.predict(x_train)
+
+    my_callbacks.visualize_train(feats, y_train, epoch=epochs - 1,
+                                 centers=model.get_layer('centerlosslayer').get_weights()[0],
+                                 lambda_cl=lambda_centerloss)
 
 
 ###

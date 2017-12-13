@@ -91,9 +91,21 @@ def visualize_basic(feat, labels, epoch):
     plt.clf()
     for i in range(10):
         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
-    plt.title('Just cross-entropy. Epoch = {}'.format(epoch))
+    plt.title('Validation data. Just cross-entropy. Epoch = {}'.format(epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
     plt.savefig('./images-basic/epoch-{}-val.png'.format(i2str(epoch)))
+    plt.close()
+
+def visualize_basic_train(feat, labels, epoch):
+    c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
+         '#ff00ff', '#990000', '#999900', '#009900', '#009999']
+    plt.figure()
+    plt.clf()
+    for i in range(10):
+        plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
+    plt.title('Training data. Just cross-entropy. Epoch = {}'.format(epoch))
+    plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
+    plt.savefig('./images-basic/epoch-{}-train.png'.format(i2str(epoch)))
     plt.close()
 
 
@@ -105,7 +117,20 @@ def visualize(feat, labels, epoch, centers, lambda_cl):
     for i in range(10):
         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
     plt.plot(centers[:, 0], centers[:, 1], 'kx', mew=2, ms=4)
-    plt.title('Lambda_centerloss = {}, Epoch = {}'.format(lambda_cl, epoch))
+    plt.title('Validation data. Lambda_centerloss = {}, Epoch = {}'.format(lambda_cl, epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
-    plt.savefig('./images-lambda-{}/epoch-{}-val.png'.format(lambda_cl,i2str(epoch)))
+    plt.savefig('./images-lambda-{}/epoch-{}-val.png'.format(lambda_cl, i2str(epoch)))
+    plt.close()
+
+def visualize_train(feat, labels, epoch, centers, lambda_cl):
+    c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
+         '#ff00ff', '#990000', '#999900', '#009900', '#009999']
+    plt.figure()
+    plt.clf()
+    for i in range(10):
+        plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
+    plt.plot(centers[:, 0], centers[:, 1], 'kx', mew=2, ms=4)
+    plt.title('Training data. Lambda_centerloss = {}, Epoch = {}'.format(lambda_cl, epoch))
+    plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
+    plt.savefig('./images-lambda-{}/epoch-{}-train.png'.format(lambda_cl, i2str(epoch)))
     plt.close()

@@ -25,8 +25,8 @@ weight_decay = 0.0005
 
 x_train = x_train.reshape((-1, 28, 28, 1))
 x_test = x_test.reshape((-1, 28, 28, 1))
-y_train = to_categorical(y_train, 10)
-y_test = to_categorical(y_test, 10)
+y_train_onehot = to_categorical(y_train, 10)
+y_test_onehot = to_categorical(y_test, 10)
 
 
 ### model
@@ -80,5 +80,13 @@ call2 = my_callbacks.BasicCall()
 
 ### fit
 
-model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=2, validation_data=(x_test, y_test),
+model.fit(x_train, y_train_onehot, batch_size=batch_size, epochs=epochs, verbose=2, validation_data=(x_test, y_test_onehot),
           callbacks=[call1, call2])
+
+##
+
+model2 = Model(inputs=model.input, outputs=model.get_layer('side_out').output)
+
+feats = model2.predict(x_train)
+
+my_callbacks.visualize_basic_train(feats, y_train, epoch=epochs-1)
