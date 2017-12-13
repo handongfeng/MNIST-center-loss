@@ -59,6 +59,8 @@ def basic_model(x):
     x = prelu(x, name='side_out')
     return Dense(10, activation='softmax', kernel_regularizer=l2(weight_decay))(x)
 
+###
+
 def run():
     """
     Run the model
