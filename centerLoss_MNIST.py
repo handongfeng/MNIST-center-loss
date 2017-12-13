@@ -153,7 +153,7 @@ def run(lambda_centerloss):
               verbose=2, validation_data=([x_test, y_test_onehot], [y_test_onehot, dummy2]),
               callbacks=[call1, call2])
 
-    ###
+    ### run training set
 
     reduced_model = Model(inputs=model.input[0], outputs=model.get_layer('side_out').output)
     feats = reduced_model.predict(x_train)
