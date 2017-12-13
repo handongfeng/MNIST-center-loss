@@ -14,18 +14,20 @@ We then add the 'center loss term' (centerloss_MNIST.py):
 
 ---
 
-The original authors implement in Caffe:
+The original authors implement in [Caffe](http://caffe.berkeleyvision.org/):
 
 https://github.com/ydwen/caffe-face
 
 Some other repos which are trying to do similar:
 
 https://github.com/shamangary/Keras-MNIST-center-loss-with-visualization
+Warning: Don't think this is the same method as the paper presents
 
 https://github.com/EncodeTS/TensorFlow_Center_Loss (TensorFlow)
+Warning: visualizations are on training set
 
 https://github.com/jxgu1016/MNIST_center_loss_pytorch (PyTorch)
-
+Warning: visualizations are on training set
 
 
 
