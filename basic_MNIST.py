@@ -105,7 +105,7 @@ def run():
               validation_data=(x_test, y_test_onehot),
               callbacks=[call1, call3])
 
-    ### run training set
+    ### run training and val sets
 
     reduced_model = Model(inputs=model.input, outputs=model.get_layer('side_out').output)
     feats = reduced_model.predict(x_train)
