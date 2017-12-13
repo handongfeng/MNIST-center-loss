@@ -20,15 +20,6 @@ batch_size = 64
 epochs = 50
 weight_decay = 0.0005
 
-### get data
-
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-x_train = x_train.reshape((-1, 28, 28, 1))
-x_test = x_test.reshape((-1, 28, 28, 1))
-y_train_onehot = to_categorical(y_train, 10)
-y_test_onehot = to_categorical(y_test, 10)
-
 
 ### prelu
 
@@ -68,36 +59,56 @@ def basic_model(x):
     x = prelu(x, name='side_out')
     return Dense(10, activation='softmax', kernel_regularizer=l2(weight_decay))(x)
 
+def run():
+    """
+    Run the model
+    :return:
+    """
 
-### compile
+    ### get data
 
-inputs = Input((28, 28, 1))
-out = basic_model(inputs)
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-model = Model(inputs=inputs, outputs=out)
-model.summary()
+    x_train = x_train.reshape((-1, 28, 28, 1))
+    x_test = x_test.reshape((-1, 28, 28, 1))
+    y_train_onehot = to_categorical(y_train, 10)
+    y_test_onehot = to_categorical(y_test, 10)
 
-optim = optimizers.SGD(lr=initial_learning_rate, momentum=0.9)
-model.compile(optimizer=optim,
-              loss=losses.categorical_crossentropy,
-              metrics=['accuracy'])
 
-### callbacks
+    ### compile
 
-utils.build_empty_dir('logs-basic')
-utils.build_empty_dir('images-basic')
-call1 = TensorBoard(log_dir='logs-basic')
-call2 = my_callbacks.BasicCall()
-call3 = my_callbacks.Alpha_Print()
+    inputs = Input((28, 28, 1))
+    out = basic_model(inputs)
 
-### fit
+    model = Model(inputs=inputs, outputs=out)
+    model.summary()
 
-model.fit(x_train, y_train_onehot, batch_size=batch_size, epochs=epochs, verbose=2,
-          validation_data=(x_test, y_test_onehot),
-          callbacks=[call1, call2, call3])
+    optim = optimizers.SGD(lr=initial_learning_rate, momentum=0.9)
+    model.compile(optimizer=optim,
+                  loss=losses.categorical_crossentropy,
+                  metrics=['accuracy'])
 
-### run training set
+    ### callbacks
 
-reduced_model = Model(inputs=model.input, outputs=model.get_layer('side_out').output)
-feats = reduced_model.predict(x_train)
-my_callbacks.visualize_basic_train(feats, y_train, epoch=epochs - 1)
+    utils.build_empty_dir('logs-basic')
+    utils.build_empty_dir('images-basic')
+    call1 = TensorBoard(log_dir='logs-basic')
+    call2 = my_callbacks.BasicCall()
+    call3 = my_callbacks.Alpha_Print()
+
+    ### fit
+
+    model.fit(x_train, y_train_onehot, batch_size=batch_size, epochs=epochs, verbose=2,
+              validation_data=(x_test, y_test_onehot),
+              callbacks=[call1, call2, call3])
+
+    ### run training set
+
+    reduced_model = Model(inputs=model.input, outputs=model.get_layer('side_out').output)
+    feats = reduced_model.predict(x_train)
+    my_callbacks.visualize_basic_train(feats, y_train, epoch=epochs - 1)
+
+###
+
+if __name__=='__main__':
+    run()
