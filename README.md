@@ -24,11 +24,7 @@ https://github.com/shamangary/Keras-MNIST-center-loss-with-visualization
 Warning: Don't think this is the same method as the paper presents
 
 https://github.com/EncodeTS/TensorFlow_Center_Loss (TensorFlow)
-Warning: visualizations are on training set
+Warning: Readme visualizations are on training set
 
 https://github.com/jxgu1016/MNIST_center_loss_pytorch (PyTorch)
-Warning: visualizations are on training set
-
-
-
-
+Warning: Readme visualizations are on training set
