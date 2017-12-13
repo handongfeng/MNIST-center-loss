@@ -1,12 +1,14 @@
 from keras.callbacks import TensorBoard
 from keras.datasets import mnist
 from keras.models import Model
-from keras.layers import Input, Dense, Flatten, BatchNormalization, Activation
+from keras.layers import Input, Dense, Flatten, BatchNormalization
 from keras.layers import Conv2D, MaxPool2D
 from keras import optimizers
 from keras import losses
 from keras.utils import to_categorical
 from keras.regularizers import l2
+from keras.layers.advanced_activations import PReLU
+from keras import initializers
 
 import utils
 import my_callbacks
@@ -28,6 +30,15 @@ y_train_onehot = to_categorical(y_train, 10)
 y_test_onehot = to_categorical(y_test, 10)
 
 
+### prelu
+
+def prelu(x, name='default'):
+    if name == 'default':
+        return PReLU(alpha_initializer=initializers.Constant(value=0.25))(x)
+    else:
+        return PReLU(alpha_initializer=initializers.Constant(value=0.25), name=name)(x)
+
+
 ### model
 
 
@@ -35,25 +46,26 @@ def basic_model(x):
     x = BatchNormalization()(x)
     #
     x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
-    x = Activation('relu')(x)
+    x = prelu(x)
     x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
-    x = Activation('relu')(x)
+    x = prelu(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
-    x = Activation('relu')(x)
+    x = prelu(x)
     x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
-    x = Activation('relu')(x)
+    x = prelu(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
-    x = Activation('relu')(x)
+    x = prelu(x)
     x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
-    x = Activation('relu')(x)
+    x = prelu(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Flatten()(x)
-    x = Dense(2, name='side_out', kernel_regularizer=l2(weight_decay))(x)
+    x = Dense(2, kernel_regularizer=l2(weight_decay))(x)
+    x = prelu(x, name='side_out')
     return Dense(10, activation='softmax', kernel_regularizer=l2(weight_decay))(x)
 
 
@@ -76,12 +88,13 @@ utils.build_empty_dir('logs-basic')
 utils.build_empty_dir('images-basic')
 call1 = TensorBoard(log_dir='logs-basic')
 call2 = my_callbacks.BasicCall()
+call3 = my_callbacks.Alpha_Print()
 
 ### fit
 
 model.fit(x_train, y_train_onehot, batch_size=batch_size, epochs=epochs, verbose=2,
           validation_data=(x_test, y_test_onehot),
-          callbacks=[call1, call2])
+          callbacks=[call1, call2, call3])
 
 ### run training set
 

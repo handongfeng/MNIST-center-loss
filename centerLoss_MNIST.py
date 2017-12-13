@@ -1,7 +1,7 @@
 from keras.callbacks import TensorBoard
 from keras.datasets import mnist
 from keras.models import Model
-from keras.layers import Input, Dense, Flatten, BatchNormalization, Activation
+from keras.layers import Input, Dense, Flatten, BatchNormalization
 from keras.layers import Conv2D, MaxPool2D
 from keras import optimizers
 from keras import losses
@@ -9,6 +9,8 @@ from keras import backend as K
 from keras.engine.topology import Layer
 from keras.utils import to_categorical
 from keras.regularizers import l2
+from keras.layers.advanced_activations import PReLU
+from keras import initializers
 
 import utils
 import my_callbacks
@@ -20,6 +22,15 @@ initial_learning_rate = 1e-3
 batch_size = 64
 epochs = 50
 weight_decay = 0.0005
+
+
+### prelu
+
+def prelu(x, name='default'):
+    if name == 'default':
+        return PReLU(alpha_initializer=initializers.Constant(value=0.25))(x)
+    else:
+        return PReLU(alpha_initializer=initializers.Constant(value=0.25), name=name)(x)
 
 
 ### special layer
@@ -70,32 +81,27 @@ def zero_loss(y_true, y_pred):
 def my_model(x, labels):
     x = BatchNormalization()(x)
     #
-    x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(
-        x)
-    x = Activation('relu')(x)
-    x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(
-        x)
-    x = Activation('relu')(x)
+    x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+    x = prelu(x)
+    x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+    x = prelu(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
-    x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(
-        x)
-    x = Activation('relu')(x)
-    x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(
-        x)
-    x = Activation('relu')(x)
+    x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+    x = prelu(x)
+    x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+    x = prelu(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
-    x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same',
-               kernel_regularizer=l2(weight_decay))(x)
-    x = Activation('relu')(x)
-    x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same',
-               kernel_regularizer=l2(weight_decay))(x)
-    x = Activation('relu')(x)
+    x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+    x = prelu(x)
+    x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+    x = prelu(x)
     x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
     #
     x = Flatten()(x)
-    x = Dense(2, name='side_out', kernel_regularizer=l2(weight_decay))(x)
+    x = Dense(2, kernel_regularizer=l2(weight_decay))(x)
+    x = prelu(x, name='side_out')
     #
     main = Dense(10, activation='softmax', name='main_out', kernel_regularizer=l2(weight_decay))(x)
     side = CenterLossLayer(alpha=0.5, name='centerlosslayer')([x, labels])
@@ -142,6 +148,7 @@ def run(lambda_centerloss):
     utils.build_empty_dir('images-lambda-{}'.format(lambda_centerloss))
     call1 = TensorBoard(log_dir='logs')
     call2 = my_callbacks.CenterLossCall(lambda_centerloss)
+    call3 = my_callbacks.Alpha_Print()
 
     ### fit
 
@@ -151,7 +158,7 @@ def run(lambda_centerloss):
     model.fit([x_train, y_train_onehot], [y_train_onehot, dummy1], batch_size=batch_size,
               epochs=epochs,
               verbose=2, validation_data=([x_test, y_test_onehot], [y_test_onehot, dummy2]),
-              callbacks=[call1, call2])
+              callbacks=[call1, call2, call3])
 
     ### run training set
 

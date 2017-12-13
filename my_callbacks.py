@@ -102,7 +102,7 @@ def visualize_train(feat, labels, epoch, centers, lambda_cl):
 #         print('---')
 #         print(type(self.model.get_layer('centerlosslayer').get_weights()))
 #         print(len(self.model.get_layer('centerlosslayer').get_weights()))
-#         print(self.model.get_layer('centerlosslayer').get_weights()[0])
+#         print(self.model.get_layer('centerlosslayer').get_weights())
 #         print('---')
 #
 #
@@ -129,11 +129,11 @@ def visualize_train(feat, labels, epoch, centers, lambda_cl):
 #             K.set_value(self.variable, self.value)
 
 
-# class Alpha_Print(Callback):
-#
-#     def on_epoch_end(self, epoch, logs={}):
-#         print('---')
-#         print(type(self.model.get_layer('side_out').get_weights()))
-#         print(len(self.model.get_layer('side_out').get_weights()))
-#         print(self.model.get_layer('side_out').get_weights()[0])
-#         print('---')
+class Alpha_Print(Callback):
+
+    def on_epoch_end(self, epoch, logs={}):
+        print('---')
+        print(type(self.model.get_layer('side_out').get_weights()))
+        print(len(self.model.get_layer('side_out').get_weights()))
+        print(self.model.get_layer('side_out').get_weights())
+        print('---')
