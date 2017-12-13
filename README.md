@@ -4,8 +4,7 @@ Here we aim to reproduce the MNIST results from [this paper](https://ydwen.githu
 
 First we train a classifier using cross-entropy loss alone (basic_MNIST.py):
 
-<img src='./readme_figs/basic-train.png' width='400px'/>
-<img src='./readme_figs/basic-val.png' width='400px'/>
+<img src='./readme_figs/basic-train.png' width='400px'/> <img src='./readme_figs/basic-val.png' width='400px'/>
 
 
 We then add the 'center loss term' (centerloss_MNIST.py):
