@@ -137,7 +137,7 @@ def run(lambda_centerloss):
     model = Model(inputs=[main_input, aux_input], outputs=[final_output, side_output])
     model.summary()
 
-    optim = optimizers.Adam(lr=initial_learning_rate)
+    optim = optimizers.SGD(lr=initial_learning_rate, momentum=0.9)
     model.compile(optimizer=optim,
                   loss=[losses.categorical_crossentropy, zero_loss],
                   loss_weights=[1, lambda_centerloss])

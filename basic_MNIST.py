@@ -86,7 +86,7 @@ def run():
     model = Model(inputs=inputs, outputs=out)
     model.summary()
 
-    optim = optimizers.Adam(lr=initial_learning_rate)
+    optim = optimizers.SGD(lr=initial_learning_rate, momentum=0.9)
     model.compile(optimizer=optim,
                   loss=losses.categorical_crossentropy,
                   metrics=['accuracy'])
