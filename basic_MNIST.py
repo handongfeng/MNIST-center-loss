@@ -59,6 +59,7 @@ def basic_model(x):
     x = prelu(x, name='side_out')
     return Dense(10, activation='softmax', kernel_regularizer=l2(weight_decay))(x)
 
+
 ###
 
 def run():
@@ -75,7 +76,6 @@ def run():
     x_test = x_test.reshape((-1, 28, 28, 1))
     y_train_onehot = to_categorical(y_train, 10)
     y_test_onehot = to_categorical(y_test, 10)
-
 
     ### compile
 
@@ -110,7 +110,8 @@ def run():
     feats = reduced_model.predict(x_train)
     my_callbacks.visualize_basic_train(feats, y_train, epoch=epochs - 1)
 
+
 ###
 
-if __name__=='__main__':
+if __name__ == '__main__':
     run()
