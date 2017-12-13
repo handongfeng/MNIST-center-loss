@@ -9,6 +9,8 @@ First we train a classifier using cross-entropy loss alone (basic_MNIST.py):
 
 We then add the 'center loss term' (centerloss_MNIST.py):
 
+<img src='./readme_figs/l0.001-train.png' width='400px'/> <img src='./readme_figs/l0.001-val.png' width='400px'/>
+
 <img src='./readme_figs/l0.1-train.png' width='400px'/> <img src='./readme_figs/l0.1-val.png' width='400px'/>
 
 
