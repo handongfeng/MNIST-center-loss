@@ -21,7 +21,6 @@ We then add the 'center loss term' (centerloss_MNIST.py):
 <img src='./results/epoch-49-lambda-0.001-train.png' width='400px'/> <img src='./results/epoch-49-lambda-0.001-val.png' width='400px'/>
 <img src='./results/epoch-49-lambda-0.01-train.png' width='400px'/> <img src='./results/epoch-49-lambda-0.01-val.png' width='400px'/>
 <img src='./results/epoch-49-lambda-0.1-train.png' width='400px'/> <img src='./results/epoch-49-lambda-0.1-val.png' width='400px'/>
-<img src='./results/epoch-49-lambda-1.0-train.png' width='400px'/> <img src='./results/epoch-49-lambda-1.0-val.png' width='400px'/>
 
 ---
 
