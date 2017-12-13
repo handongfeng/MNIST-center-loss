@@ -148,7 +148,7 @@ def run(lambda_centerloss):
     utils.build_empty_dir('logs')
     # utils.build_empty_dir('images-lambda-{}'.format(lambda_centerloss))
     call1 = TensorBoard(log_dir='logs')
-    call2 = my_callbacks.CenterLossCall(lambda_centerloss)
+    # call2 = my_callbacks.CenterLossCall(lambda_centerloss)
     call3 = my_callbacks.Alpha_Print()
 
     ### fit
@@ -159,15 +159,21 @@ def run(lambda_centerloss):
     model.fit([x_train, y_train_onehot], [y_train_onehot, dummy1], batch_size=batch_size,
               epochs=epochs,
               verbose=2, validation_data=([x_test, y_test_onehot], [y_test_onehot, dummy2]),
-              callbacks=[call1, call2, call3])
+              callbacks=[call1, call3])
 
-    ### run training set
+    ### run training and val sets
 
     reduced_model = Model(inputs=model.input[0], outputs=model.get_layer('side_out').output)
     feats = reduced_model.predict(x_train)
     my_callbacks.visualize_train(feats, y_train, epoch=epochs - 1,
                                  centers=model.get_layer('centerlosslayer').get_weights()[0],
                                  lambda_cl=lambda_centerloss)
+    feats = reduced_model.predict(x_test)
+    my_callbacks.visualize(feats, y_test, epoch=epochs - 1,
+                                 centers=model.get_layer('centerlosslayer').get_weights()[0],
+                                 lambda_cl=lambda_centerloss)
+
+    ### done
 
     K.clear_session()
     return

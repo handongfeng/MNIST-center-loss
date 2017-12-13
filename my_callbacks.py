@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 class BasicCall(Callback):
 
-    def on_train_end(self, epoch, logs={}):
+    def on_epoch_end(self, epoch, logs={}):
         data = self.validation_data
         labels = np.argmax(data[1], axis=1)
         model = Model(inputs=self.model.input, outputs=self.model.get_layer('side_out').output)
@@ -21,7 +21,7 @@ class CenterLossCall(Callback):
         super().__init__()
         self.lambda_centerloss = lambda_centerloss
 
-    def on_train_end(self, epoch, logs={}):
+    def on_epoch_end(self, epoch, logs={}):
         data = self.validation_data
         labels = np.argmax(data[1], axis=1)
         model = Model(inputs=self.model.input[0], outputs=self.model.get_layer('side_out').output)

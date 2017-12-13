@@ -110,6 +110,10 @@ def run():
     reduced_model = Model(inputs=model.input, outputs=model.get_layer('side_out').output)
     feats = reduced_model.predict(x_train)
     my_callbacks.visualize_basic_train(feats, y_train, epoch=epochs - 1)
+    feats = reduced_model.predict(x_test)
+    my_callbacks.visualize_basic(feats, y_test, epoch=epochs - 1)
+
+    ### done
 
     K.clear_session()
     return
