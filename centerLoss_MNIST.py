@@ -10,7 +10,7 @@ def run(lambda_centerloss):
     from keras.callbacks import TensorBoard
     from keras.datasets import mnist
     from keras.models import Model
-    from keras.layers import Input, Dense, Flatten, BatchNormalization
+    from keras.layers import Input, Dense, Flatten, BatchNormalization, Activation
     from keras.layers import Conv2D, MaxPool2D
     from keras import optimizers
     from keras import losses
@@ -18,6 +18,7 @@ def run(lambda_centerloss):
     from keras.engine.topology import Layer
     from keras.utils import to_categorical
     from keras.layers.advanced_activations import PReLU
+    from keras.regularizers import l2
 
     import utils
     import my_callbacks
@@ -28,7 +29,7 @@ def run(lambda_centerloss):
     initial_learning_rate = 1e-3
     batch_size = 64
     epochs = 50
-
+    weight_decay = 0.0005
 
     ### special layer
 
@@ -46,32 +47,30 @@ def run(lambda_centerloss):
             self.counter = self.add_weight(name='counter',
                                            shape=(1,),
                                            initializer='zeros',
-                                           trainable=False) # just for debugging
+                                           trainable=False)  # just for debugging
             super().build(input_shape)
 
         def call(self, x, mask=None):
-            # x[0] is Nx2, x[1] is Nx10, self.centers is 10x2
+            # # x[0] is Nx2, x[1] is Nx10 onehot, self.centers is 10x2
             delta_centers = K.dot(K.transpose(x[1]), (K.dot(x[1], self.centers) - x[0]))  # 10x2
-            delta_centers /= K.sum(K.transpose(x[1]), axis=1, keepdims=True) + 1e-3
+            center_counts = K.sum(K.transpose(x[1]), axis=1, keepdims=True) + 1  # 10x1
+            delta_centers /= center_counts
             new_centers = self.centers - self.alpha * delta_centers
             self.add_update((self.centers, new_centers), x)
 
             self.add_update((self.counter, self.counter + 1), x)
 
             self.result = x[0] - K.dot(x[1], self.centers)
-            self.result = K.sum(self.result ** 2, axis=1, keepdims=True)
+            self.result = K.sum(self.result ** 2, axis=1, keepdims=True) / K.dot(x[1], center_counts)
             return self.result
 
         def compute_output_shape(self, input_shape):
             return K.int_shape(self.result)
 
-
     ### custom loss
 
-
     def zero_loss(y_true, y_pred):
-        return 0.5*K.mean(y_pred, axis=0)
-
+        return 0.5 * K.sum(y_pred, axis=0)
 
     ### get data
 
@@ -82,37 +81,36 @@ def run(lambda_centerloss):
     y_train_onehot = to_categorical(y_train, 10)
     y_test_onehot = to_categorical(y_test, 10)
 
-
     ### model
 
     def my_model(x, labels):
         x = BatchNormalization()(x)
         #
-        x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-        x = PReLU()(x)
-        x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-        x = PReLU()(x)
+        x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(
+            x)
+        x = Activation('relu')(x)
+        x = Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+        x = Activation('relu')(x)
         x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
         #
-        x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-        x = PReLU()(x)
-        x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-        x = PReLU()(x)
+        x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+        x = Activation('relu')(x)
+        x = Conv2D(filters=64, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+        x = Activation('relu')(x)
         x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
         #
-        x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-        x = PReLU()(x)
-        x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same')(x)
-        x = PReLU()(x)
+        x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+        x = Activation('relu')(x)
+        x = Conv2D(filters=128, kernel_size=(5, 5), strides=(1, 1), padding='same', kernel_regularizer=l2(weight_decay))(x)
+        x = Activation('relu')(x)
         x = MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid')(x)
         #
         x = Flatten()(x)
-        x = Dense(2, name='side_out')(x)
+        x = Dense(2, name='side_out', kernel_regularizer=l2(weight_decay))(x)
         #
-        main = Dense(10, activation='softmax', name='main_out')(x)
+        main = Dense(10, activation='softmax', name='main_out', kernel_regularizer=l2(weight_decay))(x)
         side = CenterLossLayer(alpha=0.5, name='centerlosslayer')([x, labels])
         return main, side
-
 
     ### compile
 
@@ -124,7 +122,7 @@ def run(lambda_centerloss):
     model = Model(inputs=[main_input, aux_input], outputs=[final_output, side_output])
     model.summary()
 
-    optim = optimizers.Adam(lr=initial_learning_rate)
+    optim = optimizers.SGD(lr=initial_learning_rate, momentum=0.9)
     model.compile(optimizer=optim,
                   loss=[losses.categorical_crossentropy, zero_loss],
                   loss_weights=[1, lambda_centerloss])
@@ -146,7 +144,8 @@ def run(lambda_centerloss):
               verbose=2, validation_data=([x_test, y_test_onehot], [y_test_onehot, dummy2]),
               callbacks=[call1, call2])
 
+
 ###
 
-if __name__=='__main__':
-    run(0.1)
+if __name__ == '__main__':
+    run(1.0)
