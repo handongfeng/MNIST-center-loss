@@ -31,49 +31,6 @@ class CenterLossCall(Callback):
         return
 
 
-class Centers_Print(Callback):
-
-    def on_epoch_end(self, epoch, logs={}):
-        print('---')
-        print(type(self.model.get_layer('centerlosslayer').get_weights()))
-        print(len(self.model.get_layer('centerlosslayer').get_weights()))
-        print(self.model.get_layer('centerlosslayer').get_weights()[0])
-        print('---')
-
-
-class Counter_Print(Callback):
-
-    def on_batch_end(self, epoch, logs={}):
-        print(type(self.model.get_layer('centerlosslayer').get_weights()))
-        print(len(self.model.get_layer('centerlosslayer').get_weights()))
-        print(self.model.get_layer('centerlosslayer').get_weights()[1])
-
-
-# class ActivateCenterLoss(Callback):
-#
-#     def __init__(self, variable, value, threshold=1):
-#         super().__init__()
-#         self.variable = variable
-#         self.value = value
-#         self.threshold = threshold
-#
-#     def on_epoch_end(self, epoch, logs={}):
-#         if epoch + 1 < self.threshold:
-#             pass
-#         else:
-#             K.set_value(self.variable, self.value)
-
-
-# class Alpha_Print(Callback):
-#
-#     def on_epoch_end(self, epoch, logs={}):
-#         print('---')
-#         print(type(self.model.get_layer('side_out').get_weights()))
-#         print(len(self.model.get_layer('side_out').get_weights()))
-#         print(self.model.get_layer('side_out').get_weights()[0])
-#         print('---')
-
-
 ###
 
 def i2str(i):
@@ -95,6 +52,7 @@ def visualize_basic(feat, labels, epoch):
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
     plt.savefig('./images-basic/epoch-{}-val.png'.format(i2str(epoch)))
     plt.close()
+
 
 def visualize_basic_train(feat, labels, epoch):
     c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
@@ -122,6 +80,7 @@ def visualize(feat, labels, epoch, centers, lambda_cl):
     plt.savefig('./images-lambda-{}/epoch-{}-val.png'.format(lambda_cl, i2str(epoch)))
     plt.close()
 
+
 def visualize_train(feat, labels, epoch, centers, lambda_cl):
     c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
          '#ff00ff', '#990000', '#999900', '#009900', '#009999']
@@ -134,3 +93,47 @@ def visualize_train(feat, labels, epoch, centers, lambda_cl):
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
     plt.savefig('./images-lambda-{}/epoch-{}-train.png'.format(lambda_cl, i2str(epoch)))
     plt.close()
+
+###
+
+# class Centers_Print(Callback):
+#
+#     def on_epoch_end(self, epoch, logs={}):
+#         print('---')
+#         print(type(self.model.get_layer('centerlosslayer').get_weights()))
+#         print(len(self.model.get_layer('centerlosslayer').get_weights()))
+#         print(self.model.get_layer('centerlosslayer').get_weights()[0])
+#         print('---')
+#
+#
+# class Counter_Print(Callback):
+#
+#     def on_batch_end(self, epoch, logs={}):
+#         print(type(self.model.get_layer('centerlosslayer').get_weights()))
+#         print(len(self.model.get_layer('centerlosslayer').get_weights()))
+#         print(self.model.get_layer('centerlosslayer').get_weights()[1])
+
+
+# class ActivateCenterLoss(Callback):
+#
+#     def __init__(self, variable, value, threshold=1):
+#         super().__init__()
+#         self.variable = variable
+#         self.value = value
+#         self.threshold = threshold
+#
+#     def on_epoch_end(self, epoch, logs={}):
+#         if epoch + 1 < self.threshold:
+#             pass
+#         else:
+#             K.set_value(self.variable, self.value)
+
+
+# class Alpha_Print(Callback):
+#
+#     def on_epoch_end(self, epoch, logs={}):
+#         print('---')
+#         print(type(self.model.get_layer('side_out').get_weights()))
+#         print(len(self.model.get_layer('side_out').get_weights()))
+#         print(self.model.get_layer('side_out').get_weights()[0])
+#         print('---')

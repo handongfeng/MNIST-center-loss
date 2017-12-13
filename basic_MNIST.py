@@ -6,7 +6,6 @@ from keras.layers import Conv2D, MaxPool2D
 from keras import optimizers
 from keras import losses
 from keras.utils import to_categorical
-from keras.layers.advanced_activations import PReLU
 from keras.regularizers import l2
 
 import utils
@@ -80,13 +79,12 @@ call2 = my_callbacks.BasicCall()
 
 ### fit
 
-model.fit(x_train, y_train_onehot, batch_size=batch_size, epochs=epochs, verbose=2, validation_data=(x_test, y_test_onehot),
+model.fit(x_train, y_train_onehot, batch_size=batch_size, epochs=epochs, verbose=2,
+          validation_data=(x_test, y_test_onehot),
           callbacks=[call1, call2])
 
-##
+### run training set
 
-model2 = Model(inputs=model.input, outputs=model.get_layer('side_out').output)
-
-feats = model2.predict(x_train)
-
-my_callbacks.visualize_basic_train(feats, y_train, epoch=epochs-1)
+reduced_model = Model(inputs=model.input, outputs=model.get_layer('side_out').output)
+feats = reduced_model.predict(x_train)
+my_callbacks.visualize_basic_train(feats, y_train, epoch=epochs - 1)
