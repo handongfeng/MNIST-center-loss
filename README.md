@@ -4,14 +4,14 @@ Here we aim to reproduce the MNIST results from [this paper](https://ydwen.githu
 
 First we train a classifier using cross-entropy loss alone (basic_MNIST.py):
 
-<img src='./results/basic-train.png' width='400px'/> <img src='./results/basic-val.png' width='400px'/>
+<img src='./results/epoch-49-basic-train.png' width='400px'/> <img src='./results/epoch-49-basic-val.png' width='400px'/>
 
 
 We then add the 'center loss term' (centerloss_MNIST.py):
 
-<img src='./readme_figs/l0.001-train.png' width='400px'/> <img src='./readme_figs/l0.001-val.png' width='400px'/>
+<img src='./results/epoch-49-lambda-1e-05-train.png' width='400px'/> <img src='./results/epoch-49-lambda-1e-05-val.png' width='400px'/>
+<img src='./results/epoch-49-lambda-0.0001-train.png' width='400px'/> <img src='./results/epoch-49-lambda-0.0001-val.png' width='400px'/>
 
-<img src='./readme_figs/l0.1-train.png' width='400px'/> <img src='./readme_figs/l0.1-val.png' width='400px'/>
 
 
 ---
