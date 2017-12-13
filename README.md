@@ -2,6 +2,11 @@ Here we aim to reproduce the MNIST results from [this paper](https://ydwen.githu
 
 *Y. Wen, K. Zhang, Z. Li, and Y. Qiao, ‘A Discriminative Feature Learning Approach for Deep Face Recognition’, in Computer Vision – ECCV 2016, 2016, pp. 499–515.*
 
+- Results
+- Links
+
+**Results**
+
 First we train a classifier using cross-entropy loss alone (basic_MNIST.py):
 
 <img src='./results/epoch-49-basic-train.png' width='400px'/> <img src='./results/epoch-49-basic-val.png' width='400px'/>
@@ -11,10 +16,14 @@ We then add the 'center loss term' (centerloss_MNIST.py):
 
 <img src='./results/epoch-49-lambda-1e-05-train.png' width='400px'/> <img src='./results/epoch-49-lambda-1e-05-val.png' width='400px'/>
 <img src='./results/epoch-49-lambda-0.0001-train.png' width='400px'/> <img src='./results/epoch-49-lambda-0.0001-val.png' width='400px'/>
-
-
+<img src='./results/epoch-49-lambda-0.001-train.png' width='400px'/> <img src='./results/epoch-49-lambda-0.001-val.png' width='400px'/>
+<img src='./results/epoch-49-lambda-0.01-train.png' width='400px'/> <img src='./results/epoch-49-lambda-0.01-val.png' width='400px'/>
+<img src='./results/epoch-49-lambda-0.1-train.png' width='400px'/> <img src='./results/epoch-49-lambda-0.1-val.png' width='400px'/>
+<img src='./results/epoch-49-lambda-1.0-train.png' width='400px'/> <img src='./results/epoch-49-lambda-1.0-val.png' width='400px'/>
 
 ---
+
+**Links**
 
 The original authors implement in [Caffe](http://caffe.berkeleyvision.org/):
 
