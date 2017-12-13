@@ -20,11 +20,11 @@ https://github.com/ydwen/caffe-face
 
 Some other repos which are trying to do similar:
 
-https://github.com/shamangary/Keras-MNIST-center-loss-with-visualization
+https://github.com/shamangary/Keras-MNIST-center-loss-with-visualization <br />
 Warning: Don't think this is the same method as the paper presents
 
-https://github.com/EncodeTS/TensorFlow_Center_Loss (TensorFlow)
+https://github.com/EncodeTS/TensorFlow_Center_Loss (TensorFlow) <br />
 Warning: Readme visualizations are on training set
 
-https://github.com/jxgu1016/MNIST_center_loss_pytorch (PyTorch)
+https://github.com/jxgu1016/MNIST_center_loss_pytorch (PyTorch) <br />
 Warning: Readme visualizations are on training set
