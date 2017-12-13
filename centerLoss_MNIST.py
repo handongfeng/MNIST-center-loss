@@ -146,7 +146,7 @@ def run(lambda_centerloss):
     ### callbacks
 
     utils.build_empty_dir('logs')
-    utils.build_empty_dir('images-lambda-{}'.format(lambda_centerloss))
+    # utils.build_empty_dir('images-lambda-{}'.format(lambda_centerloss))
     call1 = TensorBoard(log_dir='logs')
     call2 = my_callbacks.CenterLossCall(lambda_centerloss)
     call3 = my_callbacks.Alpha_Print()

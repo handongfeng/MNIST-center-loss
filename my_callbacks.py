@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 class BasicCall(Callback):
 
-    def on_epoch_end(self, epoch, logs={}):
+    def on_train_end(self, epoch, logs={}):
         data = self.validation_data
         labels = np.argmax(data[1], axis=1)
         model = Model(inputs=self.model.input, outputs=self.model.get_layer('side_out').output)
@@ -21,7 +21,7 @@ class CenterLossCall(Callback):
         super().__init__()
         self.lambda_centerloss = lambda_centerloss
 
-    def on_epoch_end(self, epoch, logs={}):
+    def on_train_end(self, epoch, logs={}):
         data = self.validation_data
         labels = np.argmax(data[1], axis=1)
         model = Model(inputs=self.model.input[0], outputs=self.model.get_layer('side_out').output)
@@ -29,6 +29,7 @@ class CenterLossCall(Callback):
         centers = self.model.get_layer('centerlosslayer').get_weights()[0]
         visualize(output, labels, epoch, centers, self.lambda_centerloss)
         return
+
 
 
 ###
@@ -50,7 +51,7 @@ def visualize_basic(feat, labels, epoch):
         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
     plt.title('Validation data. Just cross-entropy. Epoch = {}'.format(epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
-    plt.savefig('./images-basic/epoch-{}-val.png'.format(i2str(epoch)))
+    plt.savefig('./results/epoch-{}-basic-val.png'.format(i2str(epoch)))
     plt.close()
 
 
@@ -63,7 +64,7 @@ def visualize_basic_train(feat, labels, epoch):
         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
     plt.title('Training data. Just cross-entropy. Epoch = {}'.format(epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
-    plt.savefig('./images-basic/epoch-{}-train.png'.format(i2str(epoch)))
+    plt.savefig('./results/epoch-{}-basic-train.png'.format(i2str(epoch)))
     plt.close()
 
 
@@ -77,7 +78,7 @@ def visualize(feat, labels, epoch, centers, lambda_cl):
     plt.plot(centers[:, 0], centers[:, 1], 'kx', mew=2, ms=4)
     plt.title('Validation data. Lambda_centerloss = {}, Epoch = {}'.format(lambda_cl, epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
-    plt.savefig('./images-lambda-{}/epoch-{}-lambda-{}-val.png'.format(lambda_cl, i2str(epoch), lambda_cl))
+    plt.savefig('./results/epoch-{}-lambda-{}-val.png'.format(lambda_cl, i2str(epoch), lambda_cl))
     plt.close()
 
 
@@ -91,7 +92,7 @@ def visualize_train(feat, labels, epoch, centers, lambda_cl):
     plt.plot(centers[:, 0], centers[:, 1], 'kx', mew=2, ms=4)
     plt.title('Training data. Lambda_centerloss = {}, Epoch = {}'.format(lambda_cl, epoch))
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
-    plt.savefig('./images-lambda-{}/epoch-{}-lambda-{}-train.png'.format(lambda_cl, i2str(epoch), lambda_cl))
+    plt.savefig('./results/epoch-{}-lambda-{}-train.png'.format(lambda_cl, i2str(epoch), lambda_cl))
     plt.close()
 
 

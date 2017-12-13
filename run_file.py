@@ -1,5 +1,8 @@
 import basic_MNIST
 import centerLoss_MNIST
+import utils
+
+utils.build_empty_dir('results')
 
 basic_MNIST.run()
 centerLoss_MNIST.run(0.00001)

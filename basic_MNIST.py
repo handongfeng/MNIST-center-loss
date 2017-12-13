@@ -94,7 +94,7 @@ def run():
     ### callbacks
 
     utils.build_empty_dir('logs-basic')
-    utils.build_empty_dir('images-basic')
+    # utils.build_empty_dir('images-basic')
     call1 = TensorBoard(log_dir='logs-basic')
     call2 = my_callbacks.BasicCall()
     call3 = my_callbacks.Alpha_Print()
