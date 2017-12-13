@@ -2,6 +2,8 @@ Here we aim to reproduce the MNIST results from [this paper](https://ydwen.githu
 
 *Y. Wen, K. Zhang, Z. Li, and Y. Qiao, ‘A Discriminative Feature Learning Approach for Deep Face Recognition’, in Computer Vision – ECCV 2016, 2016, pp. 499–515.*
 
+Content:
+
 - Results
 - Links
 
