@@ -4,11 +4,14 @@ Here we aim to reproduce the MNIST results from [this paper](https://ydwen.githu
 
 First we train a classifier using cross-entropy loss alone (basic_MNIST.py):
 
-<img src='./readme_figs/basic.png' width='500px'/>
+<img src='./readme_figs/basic-train.png' width='500px'/>
+<img src='./readme_figs/basic-val.png' width='500px'/>
+
 
 We then add the 'center loss term' (centerloss_MNIST.py):
 
-<img src='./readme_figs/centerloss-0.1.png' width='500px'/>
+<img src='./readme_figs/l0.1-train.png' width='500px'/>
+<img src='./readme_figs/l0.1-val.png' width='500px'/>
 
 
 ---
@@ -26,11 +29,6 @@ https://github.com/EncodeTS/TensorFlow_Center_Loss (TensorFlow)
 https://github.com/jxgu1016/MNIST_center_loss_pytorch (PyTorch)
 
 
----
 
-gifs:
-
-<img src='./readme_figs/basic.gif' width='500px'>
-<img src='./readme_figs/centerloss-0.1.gif' width='500px'>
 
 
